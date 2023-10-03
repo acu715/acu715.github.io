@@ -22,18 +22,35 @@ td {
 }
 /* 表格样式 */
 
-/* 文字置中 */
-.zhizhong {
-    text-align: center;
-}
-/* 文字置中 */
+/* a元素颜色 */
+a{color:black} /设置默认颜色/
+a:link {color:black;}/未访问颜色/
+a:visited {color:black;} /已访问颜色/
+a:hover {color:black;} /悬浮（鼠标经过）时颜色/
+a:active {color:black;} /点击时的颜色/
+
+/* 默认
+a{color:black} /设置默认颜色/
+a:link {color:blue;} /未访问颜色/
+a:visited {color:gray;} /已访问颜色/
+a:hover {color:red;} /悬浮（鼠标经过）时颜色/
+a:active {color:yellow;} /点击时的颜色/
+*/
+/* a元素黑色 */
 
 /* a元素置中 */
+
 .azhizhong {
     display: block;
     text-align: center;
 }
 /* a元素置中 */
+
+/* 文字置中 */
+.zhizhong {
+    text-align: center;
+}
+/* 文字置中 */
 
 /* 文字灰色 */
 .grey {
