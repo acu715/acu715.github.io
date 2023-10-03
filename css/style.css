@@ -1,0 +1,132 @@
+/* 背景颜色 */
+body {
+    background-color: #F7DC6F;
+}
+/* 背景颜色 */
+
+/* 表格样式 （自动） */
+table {
+    border-collapse: collapse;
+}
+
+table, td, th {
+    border: 1px solid black;
+}
+
+table{
+    margin-left:auto; 
+    margin-right:auto;
+}
+td {
+  text-align:center;
+}
+/* 表格样式 */
+
+/* 文字置中 */
+.zhizhong {
+    text-align: center;
+}
+/* 文字置中 */
+
+/* a元素置中 */
+.azhizhong {
+    display: block;
+    text-align: center;
+}
+/* a元素置中 */
+
+/* 文字灰色 */
+.grey {
+    color: #878787
+}
+/* 文字灰色 */
+
+/*文字黑色*/
+.black {
+    color: black;
+}
+/*文字黑色*/
+
+/* 文字宋体 */
+.weiruanyahei {
+    font-family:"微软雅黑";
+}
+/* 文字宋体 */
+
+/*分割线*/
+.fengexian {
+    color: black;
+    border: double;
+    border-width: 3px 5px;
+    border-color: black transparent;
+    height: 1px;
+    overflow: visible;
+    margin-left: 20px;
+    margin-right: 20px;
+    position: relative;
+}
+.fengexian:before,
+.fengexian:after {
+    content: '';
+    position: absolute;
+    width: 5px; height: 5px;
+    border-width: 0 3px 3px 0;
+    border-style: double;
+    top: -3px;
+    background: radial-gradient(2px at 1px 1px, currentColor 2px, transparent 0) no-repeat;
+}
+.fengexian:before {
+    transform: rotate(-45deg);
+    left: -20px;
+}
+.fengexian:after {
+    transform: rotate(135deg);
+    right: -20px;
+}
+/*分割线*/
+
+
+/* 白色区域 */
+.whiteword {
+    color:white;
+}
+
+.roundBorder {
+    display: block;
+}
+
+.roundBorder * {
+    background: white;
+    display: block;
+    height: 1px;
+    overflow: hidden;
+}
+
+.roundBorderLayer1 {
+    border-left: 1px solid #C4C4C4;
+    border-right: 1px solid #C4C4C4;
+    margin: 0px 1px;
+}
+
+.roundBorderLayer2 {
+    border-left: 1px solid #D3D4D5;
+    border-right: 1px solid #D3D4D5;
+    margin: 0px 2px;
+    padding: 0px;
+}
+
+.roundBorderLayer3 {
+    background: #C4C4C4;
+    border-left: 1px solid #D3D4D5;
+    border-right: 1px solid #D3D4D5;
+    margin: 0px 3px;
+}
+
+.roundContent {
+    background: white;
+    border-left: 1px solid #C4C4C4;
+    border-right: 1px solid #C4C4C4;
+    overflow: hidden;
+    padding: 4px 10px;
+}
+/* 白色区域 */
