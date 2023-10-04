@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>下载——acu715的连接导航</title>
+    <link rel="icon" href="icon.png">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <script><!--内容判断-->
+        function checkPassword() {
+            // 获取密码输入框中的值
+            var a = document.getElementById("a").value;
+            var b = document.getElementById("b").value;
+            // 进行密码检查
+            if (a === "123456" && b === "123456") {
+                location.href = "./data/qiuchiuchunting.html"
+                alert("正确,正在跳转...");
+            } else if (a === "100001" && b === "112233") {
+                location.href = "./data/X.html"
+                alert("正确,正在跳转...");
+            } else {
+                alert("存取码或确认码错误！");
+            }
+        }
+    </script>
+
+    <p>存取码：<input type="password" id="a"></p><!--资料填写-->
+    <p>确认码：<input type="password" id="b"></p>
+    <p><button type="button" onclick="checkPassword()">检查密码</button></p>
+    <p><a href="./open.html"><button>我只是个游客，查看已公开文件</button></a></p>
+</body>
+</html>
