@@ -7,7 +7,7 @@ AV.init({
 
 new Vue({
   el: '#app',
-  data() {
+  Data_link() {
     return {
       // 遮罩层
       loading: true,
@@ -47,7 +47,7 @@ new Vue({
     getList() {
       this.loading = true;
       this.tableList = [];
-      const queryAll = new AV.Query('Data');
+      const queryAll = new AV.Query('Data_link');
       if (this.queryParams.name) {
         queryAll.contains('name', this.queryParams.name);
       }
@@ -85,15 +85,15 @@ new Vue({
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.selections[0].id;
-      const query = new AV.Query('Data');
+      const query = new AV.Query('Data_link');
       query.equalTo('id', id);
-      query.first().then((data) => {
+      query.first().then((Data_link) => {
         this.form = {
-          id: data.get('id'),
-          name: data.get('name'),
-          grade: data.get('grade'),
-          points: data.get('points'),
-          address: data.get('address')
+          id: Data_link.get('id'),
+          name: Data_link.get('name'),
+          grade: Data_link.get('grade'),
+          points: Data_link.get('points'),
+          address: Data_link.get('address')
         }
         this.open = true;
         this.title = "修改数据";
@@ -104,14 +104,14 @@ new Vue({
       this.$refs.form.validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            const query = new AV.Query('Data');
+            const query = new AV.Query('Data_link');
             query.equalTo('id', this.form.id);
-            query.first().then((data) => {
-              data.set('name', this.form.name);
-              data.set('grade', this.form.grade);
-              data.set('points', this.form.points);
-              data.set('address', this.form.address);
-              data.save().then((data) => {
+            query.first().then((Data_link) => {
+              Data_link.set('name', this.form.name);
+              Data_link.set('grade', this.form.grade);
+              Data_link.set('points', this.form.points);
+              Data_link.set('address', this.form.address);
+              Data_link.save().then((Data_link) => {
                 this.$message({
                   type: 'success',
                   message: '修改成功!'
@@ -121,11 +121,11 @@ new Vue({
               });
             })
           } else {
-            const data = new AV.Object('Data_of_link');
-            data.set('link', this.form.name);
-            data.set('label', this.form.grade);
-            data.set('lebel2', this.form.points);
-            data.save().then((data) => {
+            const Data_link = new AV.Object('Data_link_of_link');
+            Data_link.set('link', this.form.name);
+            Data_link.set('label', this.form.grade);
+            Data_link.set('lebel2', this.form.points);
+            Data_link.save().then((Data_link) => {
               this.$message({
                 type: 'success',
                 message: '新增成功!'
@@ -160,10 +160,10 @@ new Vue({
           cancelButtonText: "取消",
           type: "warning"
         }).then(() => {
-          const query = new AV.Query('Data');
+          const query = new AV.Query('Data_link');
           query.equalTo('id', row.id);
-          query.first().then((data) => {
-            data.destroy().then((data) => {
+          query.first().then((Data_link) => {
+            Data_link.destroy().then((Data_link) => {
               this.$message({
                 type: 'success',
                 message: '删除成功!'
@@ -185,7 +185,7 @@ new Vue({
           type: "warning"
         }).then(() => {
           const ids = this.selections.map(item => item.id);
-          const query = new AV.Query('Data');
+          const query = new AV.Query('Data_link');
           query.containedIn('id', ids);
           query.find().then((rows) => {
             AV.Object.destroyAll(rows).then((rows) => {
