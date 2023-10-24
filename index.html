@@ -74,8 +74,11 @@
         <el-input v-model="form.grade" placeholder="请输入链接名"/>
       </el-form-item>
       <el-form-item label="备注" prop="label2">
-        <el-input-number v-model="form.points" :min="0" :max="100"></el-input-number>
+        <el-input v-model="form.grade" placeholder="请输入备注"/>
       </el-form-item>
+      <!--<el-form-item label="备注" prop="label2">
+        <el-input-number v-model="form.points" :min="0" :max="100"></el-input-number>
+      </el-form-item>--!>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitForm">确 定</el-button>
