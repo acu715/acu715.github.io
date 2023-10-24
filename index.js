@@ -33,9 +33,9 @@ new Vue({
       form: {},
       // 表单校验
       rules: {
-        name: [{required: true, message: "姓名不能为空", trigger: "blur"}],
-        grade: [{required: true, message: "年级不能为空", trigger: "blur"}],
-        points: [{required: true, message: "得分不能为空", trigger: "blur"}],
+        name: [{required: true, message: "链接URL不能为空", trigger: "blur"}],
+        grade: [{required: true, message: "链接名不能为空", trigger: "blur"}],
+        points: [{required: true, message: "备注不能为空", trigger: "blur"}],
       }
     };
   },
@@ -121,11 +121,10 @@ new Vue({
               });
             })
           } else {
-            const data = new AV.Object('Data');
-            data.set('name', this.form.name);
-            data.set('grade', this.form.grade);
-            data.set('points', this.form.points);
-            data.set('address', this.form.address);
+            const data = new AV.Object('Data_of_link');
+            data.set('link', this.form.name);
+            data.set('label', this.form.grade);
+            data.set('lebel2', this.form.points);
             data.save().then((data) => {
               this.$message({
                 type: 'success',
