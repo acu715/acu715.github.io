@@ -33,9 +33,9 @@ new Vue({
       form: {},
       // 表单校验
       rules: {
-        name: [{required: true, message: "链接URL不能为空", trigger: "blur"}],
-        grade: [{required: true, message: "链接名不能为空", trigger: "blur"}],
-        points: [{required: true, message: "备注不能为空", trigger: "blur"}],
+        link: [{required: true, message: "链接URL不能为空", trigger: "blur"}],
+        label: [{required: true, message: "链接名不能为空", trigger: "blur"}],
+        label2: [{required: true, message: "备注不能为空", trigger: "blur"}],
       }
     };
   },
@@ -90,10 +90,9 @@ new Vue({
       query.first().then((Data_link) => {
         this.form = {
           id: Data_link.get('id'),
-          name: Data_link.get('name'),
-          grade: Data_link.get('grade'),
-          points: Data_link.get('points'),
-          address: Data_link.get('address')
+          link: Data_link.get('link'),
+          grade: Data_link.get('label'),
+          points: Data_link.get('label2'),
         }
         this.open = true;
         this.title = "修改数据";
@@ -107,10 +106,9 @@ new Vue({
             const query = new AV.Query('Data_link');
             query.equalTo('id', this.form.id);
             query.first().then((Data_link) => {
-              Data_link.set('name', this.form.name);
-              Data_link.set('grade', this.form.grade);
-              Data_link.set('points', this.form.points);
-              Data_link.set('address', this.form.address);
+              Data_link.set('link', this.form.name);
+              Data_link.set('label', this.form.grade);
+              Data_link.set('label2', this.form.points);
               Data_link.save().then((Data_link) => {
                 this.$message({
                   type: 'success',
@@ -121,7 +119,7 @@ new Vue({
               });
             })
           } else {
-            const Data_link = new AV.Object('Data_link_of_link');
+            const Data_link = new AV.Object('Data_link');
             Data_link.set('link', this.form.name);
             Data_link.set('label', this.form.grade);
             Data_link.set('lebel2', this.form.points);
