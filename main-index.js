@@ -1,8 +1,8 @@
 const {Query, User} = AV;
 AV.init({
-  appId: "pmHpYsxvmBtERl6cmQ8sKMjf-MdYXbMMI",
-  appKey: "VA2iGJ2coooFBfxYN076tiPp",
-  serverURL: "https://pmhpysxv.api.lncldglobal.com"
+  appId: "Dv0DQbXDEX8bDBQirwSqOFmr-MdYXbMMI",  //pmHpYsxvmBtERl6cmQ8sKMjf-MdYXbMMI
+  appKey: "sdmZqM96ulfISDVqo3NcZtZh",  //VA2iGJ2coooFBfxYN076tiPp
+  serverURL: "https://dv0dqbxd.api.lncldglobal.com"  //https://pmhpysxv.api.lncldglobal.com
 });
 
 new Vue({
