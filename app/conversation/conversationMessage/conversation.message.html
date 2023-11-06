@@ -1,0 +1,217 @@
+<div flex layout="column">
+
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <md-button class="md-icon-button menu-button" aria-label="Menu" hide-gt-sm ng-click="toggle('menu')">
+        <md-icon>menu</md-icon>
+        <span ng-if="hasUnreadMessage" class="notice"></span>
+        <span ng-if="totalUnreadMessagesCount" class="unreadCount">{{totalUnreadMessagesCount}}</span>
+      </md-button>
+      <h2>
+        <span ng-if="currentConversation.members.length !== 2">{{ currentConversation.name || '群 ' + currentConversation.id.slice(-4) }}</span> <span ng-show="currentConversation.members.length > 2">({{currentConversation.members.length}})</span>
+        <span ng-if="currentConversation.members.length === 2">{{ getSingleConvTarget(currentConversation.members) }}</span>
+      </h2>
+      <span flex></span>
+
+      <md-button class="md-icon-button"
+                 aria-label="Add Clients"
+                 ng-if="!currentConversation.system && currentConversation.members.length <= 2"
+                 ng-click="showAddUserDialog($event)">
+        <md-icon>person_add</md-icon>
+      </md-button>
+      <md-button ng-if="currentConversation.members.length > 2"
+                class="md-icon-button"
+                aria-label="Online Clients"
+                ng-click="showMembersList()">
+        <md-icon>group</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+
+  <!--infinite-list-->
+  <md-content infinite-list infinite-scroll="loadMoreMessages()" layout-padding flex class="messages">
+    <div class="messages-wrapper">
+      <!--messages-->
+      <message ng-repeat="(index, message) in messages"
+        message="message"
+        previous-message="::messages[index - 1]"
+        next-message="messages[index + 1]"
+        last-delivered-at="currentConversation.lastDeliveredAt"
+        last-read-at="currentConversation.lastReadAt"
+        group-last-read-at="currentConversation.lastReadTimestamps"
+        is-group="::currentConversation.members.length > 2"
+        on-name-click="createSingleConv(message.from)"
+        on-recall-click="recall(message)"
+        is-mine="::message.from == imClient.id"></message>
+      <!--messages end-->
+      <div id="message-view-bottom"></div>
+    </div>
+  </md-content>
+  <!--infinite-list End-->
+  <md-content class="smileys-selector" ng-if="smileysInited" ng-show="smileysShow">
+    <md-tabs md-dynamic-height md-border-bottom md-enable-disconnect>
+      <md-tab label="Smiley">
+        <md-content class="smileys">
+          <md-button 
+            ng-repeat="smiley in smileys"
+            ng-click="insertSmiley(smiley)"
+            class="smiley md-button md-icon-button">{{smiley}}</md-button>
+        </md-content>
+      </md-tab>
+      <md-tab ng-repeat="group in stickers" label="{{group[0]}}">
+        <md-content class="smileys">
+          <md-button 
+            ng-repeat="sticker in group[1]"
+            ng-click="sendStickers(group[0], sticker[0])"
+            class="smiley sticker md-button"><img ng-src="{{sticker[1]}}" aria-label="{{sticker[0]}}"/></md-button>
+          <p class="note" ng-show="group[2]"><a class="link" ng-href="{{group[2][1]}}" target="_blank">{{group[2][0]}}</a></p>
+        </md-content>
+      </md-tab>
+    </md-tabs>
+  </md-content>
+
+  <div class="typing-indicator" ng-show="typingClients">
+    <span>{{typingClients}}</span>
+  </div>
+  <div layout layout-align="center center" class="editor-wrapper">
+    <form>
+      <input class="ng-hide" id="file-image" multiple type="file" accept="image/*" ng-upload-change="sendImage($event)" />
+      <label for="file-image" class="md-button md-icon-button" aria-label="Image" ><md-icon>image</md-icon></label>
+    </form>
+    <form class="editor" ng-submit="sendText()" layout layout-align="center center" flex>
+      <md-button class="md-icon-button" ng-class="{'md-primary': smileysShow}" aria-label="Smileys" ng-click="toggleSmileysSelector()">
+        <md-icon>&#xE420;</md-icon>
+      </md-button>
+      <md-input-container md-no-float flex class="textarea">
+        <md-list class="mention-suggestion" ng-show="matchedClients.length">
+          <md-list-item ng-repeat="(index, client) in matchedClients" ng-class="{active: index === suggestionActive}"  ng-click="replaceSelectedMentionedClient(index)">
+            {{client}}
+          </md-list-item>
+        </md-list>
+        <textarea id="draft"
+                  ng-model="draft"
+                  ng-trim="false"
+                  placeholder="说点什么……"
+                  ng-click="editorCursorPositionCheck($event)"
+                  ng-keydown="editorKeydownHandler($event)"
+                  ng-keyup="editorCursorPositionCheck($event)"
+                  ng-keypress="editorChangedHandler($event)"></textarea>
+      </md-input-container>
+    </form>
+    <md-button class="md-icon-button" aria-label="Send" ng-click="sendText()">
+      <md-icon>send</md-icon>
+    </md-button>
+  </div>
+</div>
+
+<!--members list -->
+<md-sidenav id="online-aside"
+            ng-show="currentConversation.members.length > 2"
+            class=" md-sidenav-right md-whiteframe-z2"
+            ng-class="{ 'under-mask': !conversation.isMenuOpen } "
+            md-component-id="online"
+            layout="column">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <!--<md-button class="md-icon-button" aria-label="Back" hide-gt-sm ng-click="conversationMessage.close('online')">-->
+        <!--<md-icon>arrow_back</md-icon>-->
+      <!--</md-button>-->
+      <h2 ng-show="currentConversation">{{ currentConversation.name || '群 ' + currentConversation.id.slice(-4) }}</h2>
+      <md-button class="md-icon-button"
+            aria-label="Edit name"
+            ng-click="showEditNameDialog($event)">
+        <md-icon>edit</md-icon>
+      </md-button> 
+      <span flex></span>
+      <!--<md-button class="md-icon-button" aria-label="Search" ng-click="conversationMessage.toggle('online-search')">-->
+        <!--<md-icon>search</md-icon>-->
+      <!--</md-button>-->
+      <md-button class="md-icon-button"
+            aria-label="Add Clients"
+            ng-click="showAddUserDialog($event)">
+        <md-icon>person_add</md-icon>
+      </md-button> 
+
+    </div>
+  </md-toolbar>
+  <md-content layout-padding class="md-body-1 member-info-disabled-warning" ng-if="memberInfoError">
+    应用未开启「成员角色管理」功能，部分功能不可用。
+  </md-content>
+  <md-list class="square-clients" flex>
+    <md-list-item ng-repeat="memberInfo in memberInfos.slice(0, maxResultsAmount)">
+      <p layout="row" layout-align="left center">
+        {{ memberInfo.memberId }}
+        <span class="client-info owner" ng-show="memberInfo.isOwner">群主</span>
+        <span class="client-info manager" ng-show="isManager(memberInfo)">管理员</span>
+      </p>
+
+      <md-menu class="md-secondary client-actions-menu">
+        <md-button class="md-icon-button">
+          <i class="material-icons">more_horiz</i>
+        </md-button>
+        <md-menu-content width="4">
+          <md-menu-item>
+            <md-button ng-click="createSingleConv(memberInfo.memberId)" ng-disabled="memberInfo === currentClientInfo">
+              <md-icon md-menu-align-target>message</md-icon>
+              单聊
+            </md-button>
+          </md-menu-item>
+          <md-menu-item ng-show="currentClientInfo.isOwner && !isAuthed(memberInfo)">
+            <md-button ng-click="updateRole(memberInfo.memberId, MemberRole.MANAGER)">
+              <md-icon md-menu-align-target>arrow_upward</md-icon>
+              升为管理员
+            </md-button>
+          </md-menu-item>
+          <md-menu-item ng-show="currentClientInfo.isOwner && isManager(memberInfo)">
+            <md-button ng-click="updateRole(memberInfo.memberId, MemberRole.MEMBER)">
+              <md-icon md-menu-align-target>arrow_downward</md-icon>
+              取消管理员
+            </md-button>
+          </md-menu-item>
+          <md-menu-item ng-show="isAuthed(currentClientInfo) && !isAuthed(memberInfo)">
+            <md-button ng-click="remove(memberInfo.memberId)">
+              <md-icon md-menu-align-target>remove</md-icon>
+              移出对话
+            </md-button>
+          </md-menu-item>
+          <md-menu-item ng-show="memberInfo === currentClientInfo">
+            <md-button ng-click="remove(memberInfo.memberId)" ng-disabled="currentClientInfo.isOwner">
+              <md-icon md-menu-align-target>remove</md-icon>
+              离开对话
+            </md-button>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+
+    </md-list-item>
+    <p ng-if="currentConversation.members.length > maxResultsAmount" class="max-results-amount-hint">最多显示 {{:: maxResultsAmount }} 位成员</p>
+  </md-list>
+</md-sidenav>
+
+
+<!--// TODO : 搜索当前群聊的成员-->
+<!--<md-sidenav id="online-aside"-->
+            <!--ng-if="conversationMessage.isGroupConversation && conversationMessage.conv.members.length"-->
+            <!--class=" md-sidenav-right md-whiteframe-z2"-->
+            <!--md-component-id="online-search"-->
+            <!--layout="column">-->
+  <!--<form ng-submit="$event.preventDefault()">-->
+    <!--<div class="search-box" layout layout-align="center center">-->
+      <!--<md-button class="md-icon-button" aria-label="Back" ng-click="conversationMessage.close('online-search')">-->
+        <!--<md-icon>arrow_back</md-icon>-->
+      <!--</md-button>-->
+      <!--<input type="text" flex ng-model="conversationMessage.queryString" ng-change="conversationMessage.query(conversationMessage.queryString)" placeholder="搜索在线用户" md-sidenav-focus>-->
+      <!--<md-button class="md-icon-button" aria-label="Clear" ng-click="conversationMessage.clearQuery()" ng-hide="conversationMessage.queryString===''">-->
+        <!--<md-icon>clear</md-icon>-->
+      <!--</md-button>-->
+    <!--</div>-->
+    <!--<md-divider></md-divider>-->
+
+  <!--</form>-->
+  <!--<md-list class="result" flex>-->
+    <!--<md-list-item ng-repeat="client in conversationMessage.queryClients.slice(0, conversationMessage.maxResultsAmount)" ng-click="conversationMessage.changeTo('@' + client)">-->
+      <!--<p class="result-item"> {{ client }} </p>-->
+    <!--</md-list-item>-->
+    <!--<p ng-if="conversationMessage.queryClients.length > conversationMessage.maxResultsAmount" class="max-results-amount-hint">最多显示 {{:: conversationMessage.maxResultsAmount }} 条结果</p>-->
+  <!--</md-list>-->
+<!--</md-sidenav>-->
