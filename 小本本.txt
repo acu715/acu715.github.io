@@ -1,0 +1,20 @@
+<-! 白色圆圈区域引用方式 ->
+<b class="roundBorder">
+	<b class="roundBorderLayer3"></b>
+	<b class="roundBorderLayer2"></b>
+	<b class="roundBorderLayer1"></b>
+</b>
+<div class="roundContent">
+	<p>正文</p>
+</div>
+	<b class="roundBorder">
+	<b class="roundBorderLayer1"></b>
+	<b class="roundBorderLayer2"></b>
+	<b class="roundBorderLayer3"></b>
+	</b>
+<h1></h1>
+<-! 白色圆圈区域引用方式 ->
+
+<-! 置中引用方式 ->
+class="zhizhong"
+<-! 置中引用方式->
